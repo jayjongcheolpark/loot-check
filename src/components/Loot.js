@@ -7,19 +7,18 @@ export class Loot extends Component {
     this.props.fetchBitcoin()
   }
 
+  computeBitcoin = () => {
+    const { bitcoin } = this.props
+    if (Object.keys(bitcoin).length === 0) return ''
+    return this.props.balance / parseInt(bitcoin.bpi.USD.rate.replace(',', ''), 10)
+  }
   render () {
     return (
       <div>
-        <h3>Bitcoin balance:</h3>
+        <h3>Bitcoin balance: {this.computeBitcoin()}</h3>
       </div>
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    state
-  }
-}
-
-export default connect(mapStateToProps, { fetchBitcoin })(Loot)
+export default connect(state => state, { fetchBitcoin })(Loot)
