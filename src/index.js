@@ -1,7 +1,8 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createStore } from 'redux'
-import rootReducer from './reducers/balance'
+import { createStore, applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
+import rootReducer from './reducers'
 import { Provider } from 'react-redux'
 import App from './components/App'
 
@@ -9,13 +10,15 @@ const isProduction = process.env.NODE_ENV === 'production'
 let store
 
 if (isProduction) {
-  store = createStore(rootReducer);
+  store = createStore(rootReducer, applyMiddleware(thunk));
 }
 else {
-
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   store = createStore(
     rootReducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    composeEnhancers(
+      applyMiddleware(thunk)
+    )
   )
 }
 
